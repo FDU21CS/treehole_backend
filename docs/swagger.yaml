@@ -1,0 +1,567 @@
+basePath: /api
+definitions:
+  apis.CreateFloorRequest:
+    properties:
+      content:
+        type: string
+      special_tag:
+        type: string
+    type: object
+  apis.CreateHoleRequest:
+    properties:
+      content:
+        type: string
+      special_tag:
+        type: string
+    type: object
+  apis.DeleteFloorRequest:
+    properties:
+      reason:
+        type: string
+    required:
+    - reason
+    type: object
+  apis.LoginRequest:
+    properties:
+      email:
+        type: string
+      password:
+        minLength: 8
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  apis.ModifyFloorRequest:
+    properties:
+      content:
+        type: string
+      special_tag:
+        type: string
+    type: object
+  apis.RegisterRequest:
+    properties:
+      email:
+        type: string
+      password:
+        minLength: 8
+        type: string
+      verification:
+        maxLength: 6
+        minLength: 6
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  apis.TokenResponse:
+    properties:
+      access:
+        type: string
+      message:
+        type: string
+      refresh:
+        type: string
+    type: object
+  apis.VerifyResponse:
+    properties:
+      message:
+        type: string
+      scope:
+        enum:
+        - register
+        - reset
+        type: string
+    type: object
+  models.Floor:
+    properties:
+      anonyname:
+        description: a random username
+        type: string
+      content:
+        description: content of the floor, no more than 15000
+        type: string
+      deleted:
+        type: boolean
+      history:
+        description: a floor has many history
+        items:
+          $ref: '#/definitions/models.FloorHistory'
+        type: array
+      hole_id:
+        type: integer
+      id:
+        description: / saved fields
+        type: integer
+      is_me:
+        description: whether the user is the author of the floor
+        type: boolean
+      modified:
+        description: the modification times of floor.content
+        type: integer
+      ranking:
+        description: the ranking of this floor in the hole
+        type: integer
+      special_tag:
+        description: additional info, like "树洞管理团队"
+        type: string
+      time_created:
+        type: string
+      time_updated:
+        type: string
+    type: object
+  models.FloorHistory:
+    properties:
+      content:
+        type: string
+      created_at:
+        type: string
+      floor_id:
+        type: integer
+      id:
+        description: / base info
+        type: integer
+      reason:
+        type: string
+      updated_at:
+        type: string
+      user_id:
+        description: The one who modified the floor
+        type: integer
+    type: object
+  models.Hole:
+    properties:
+      created_at:
+        type: string
+      floors:
+        description: 返回给前端的楼层列表，包括首楼、尾楼和预加载的前 n 个楼层
+        properties:
+          first_floor:
+            allOf:
+            - $ref: '#/definitions/models.Floor'
+            description: 首楼
+          last_floor:
+            allOf:
+            - $ref: '#/definitions/models.Floor'
+            description: 尾楼
+          prefetch:
+            description: 预加载的楼层
+            items:
+              $ref: '#/definitions/models.Floor'
+            type: array
+        type: object
+      id:
+        description: / saved fields
+        type: integer
+      reply:
+        description: 回复量（即该洞下 floor 的数量 - 1）
+        type: integer
+      updated_at:
+        type: string
+    type: object
+  models.Map:
+    additionalProperties: {}
+    type: object
+  models.User:
+    properties:
+      email:
+        type: string
+      id:
+        type: integer
+      is_admin:
+        type: boolean
+      joined_time:
+        type: string
+      last_login:
+        type: string
+    type: object
+  utils.MessageResponse:
+    properties:
+      data: {}
+      message:
+        type: string
+    type: object
+host: localhost:8000
+info:
+  contact:
+    email: dev@fduhole.com
+    name: Maintainer Chen Ke
+    url: https://danxi.fduhole.com/about
+  description: Moss Backend
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  title: Moss Backend
+  version: 0.0.1
+paths:
+  /:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Map'
+  /floors/{id}:
+    delete:
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: json
+        in: body
+        name: json
+        required: true
+        schema:
+          $ref: '#/definitions/apis.DeleteFloorRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Floor'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.MessageResponse'
+      summary: Delete A Floor
+      tags:
+      - Floor
+    get:
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Floor'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.MessageResponse'
+      summary: Get A Floor
+      tags:
+      - Floor
+    put:
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: json
+        in: body
+        name: json
+        required: true
+        schema:
+          $ref: '#/definitions/apis.ModifyFloorRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Floor'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.MessageResponse'
+      summary: Modify A Floor
+      tags:
+      - Floor
+  /holes:
+    get:
+      parameters:
+      - default: created_at
+        enum:
+        - created_at
+        - updated_at
+        in: query
+        name: order
+        type: string
+      - in: query
+        name: size
+        type: integer
+      - in: query
+        name: start_time
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Hole'
+            type: array
+      summary: Old API for Listing Holes
+      tags:
+      - Hole
+    post:
+      description: Create a hole, create floor binding to it and set the name mapping
+      parameters:
+      - description: division id
+        in: path
+        name: division_id
+        required: true
+        type: integer
+      - description: json
+        in: body
+        name: json
+        required: true
+        schema:
+          $ref: '#/definitions/apis.CreateHoleRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Hole'
+      summary: Create A Hole
+      tags:
+      - Hole
+  /holes/{hole_id}/floors:
+    get:
+      parameters:
+      - description: hole id
+        in: path
+        name: hole_id
+        required: true
+        type: integer
+      - in: query
+        name: size
+        type: integer
+      - in: query
+        name: start_floor
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Floor'
+            type: array
+      summary: List Floors In A Hole
+      tags:
+      - Floor
+    post:
+      parameters:
+      - description: hole id
+        in: path
+        name: hole_id
+        required: true
+        type: integer
+      - description: json
+        in: body
+        name: json
+        required: true
+        schema:
+          $ref: '#/definitions/apis.CreateFloorRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Floor'
+      summary: Create A Floor
+      tags:
+      - Floor
+  /holes/{id}:
+    delete:
+      description: Hide a hole, but visible to admins. This may affect many floors,
+        DO NOT ABUSE!!!
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.MessageResponse'
+      summary: Delete A Hole
+      tags:
+      - Hole
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Login with email and password, return jwt token, not need jwt
+      parameters:
+      - description: json
+        in: body
+        name: json
+        required: true
+        schema:
+          $ref: '#/definitions/apis.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/apis.TokenResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.MessageResponse'
+        "404":
+          description: User Not Found
+          schema:
+            $ref: '#/definitions/utils.MessageResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.MessageResponse'
+      summary: Login
+      tags:
+      - token
+  /logout:
+    get:
+      description: Logout, clear jwt credential and return successful message, logout,
+        login required
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.MessageResponse'
+      summary: Logout
+      tags:
+      - token
+  /refresh:
+    post:
+      description: Refresh jwt token with refresh token in header, login required
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/apis.TokenResponse'
+      summary: Refresh jwt token
+      tags:
+      - token
+  /register:
+    post:
+      consumes:
+      - application/json
+      description: register with email or phone, password and verification code
+      parameters:
+      - description: json
+        in: body
+        name: json
+        required: true
+        schema:
+          $ref: '#/definitions/apis.RegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/apis.TokenResponse'
+        "400":
+          description: 验证码错误、用户已注册
+          schema:
+            $ref: '#/definitions/utils.MessageResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.MessageResponse'
+      summary: register
+      tags:
+      - account
+    put:
+      consumes:
+      - application/json
+      description: reset password, reset jwt credential
+      parameters:
+      - description: json
+        in: body
+        name: json
+        required: true
+        schema:
+          $ref: '#/definitions/apis.RegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/apis.TokenResponse'
+        "400":
+          description: 验证码错误
+          schema:
+            $ref: '#/definitions/utils.MessageResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.MessageResponse'
+      summary: reset password
+      tags:
+      - account
+  /users/me:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+        "404":
+          description: User not found
+          schema:
+            $ref: '#/definitions/utils.MessageResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.MessageResponse'
+      summary: get current user
+      tags:
+      - user
+  /verify/email:
+    get:
+      description: verify with email in query, Send verification email
+      parameters:
+      - in: query
+        name: email
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/apis.VerifyResponse'
+        "400":
+          description: 已注册“
+          schema:
+            $ref: '#/definitions/utils.MessageResponse'
+      summary: verify with email in query
+      tags:
+      - account
+swagger: "2.0"
