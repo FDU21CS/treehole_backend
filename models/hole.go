@@ -13,10 +13,10 @@ import (
 
 type Hole struct {
 	/// saved fields
-	ID        int       `json:"id" gorm:"primaryKey"`
-	CreatedAt time.Time `json:"created_at" gorm:"index:,sort:desc"`
-	UpdatedAt time.Time `json:"updated_at" gorm:"index:,sort:desc"`
-	Deleted   time.Time `json:"-" gorm:"index"`
+	ID        int            `json:"id" gorm:"primaryKey"`
+	CreatedAt time.Time      `json:"created_at" gorm:"index:,sort:desc"`
+	UpdatedAt time.Time      `json:"updated_at" gorm:"index:,sort:desc"`
+	Deleted   gorm.DeletedAt `json:"-" gorm:"index"`
 
 	/// base info
 
