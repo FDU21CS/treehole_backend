@@ -3,6 +3,7 @@ package config
 import (
 	"fmt"
 	"github.com/caarlos0/env/v6"
+	"net/url"
 )
 
 var Config struct {
@@ -11,10 +12,9 @@ var Config struct {
 	KongUrl  string `env:"KONG_URL,required"`
 	RedisUrl string `env:"REDIS_URL"`
 	// sending email config
-	EmailUrl          string `env:"EMAIL_URL,required"`
-	TencentSecretID   string `env:"SECRET_ID,required"`
-	TencentSecretKey  string `env:"SECRET_KEY,required"`
-	TencentTemplateID uint64 `env:"TEMPLATE_ID,required"`
+	EmailServerNoReplyUrl url.URL `env:"EMAIL_SERVER_NO_REPLY_URL,required"`
+	EmailDomain           string  `env:"EMAIL_DOMAIN,required"`
+	SiteName              string  `env:"SITE_NAME" envDefault:"OpenTreeHole"`
 
 	VerificationCodeExpires int `env:"VERIFICATION_CODE_EXPIRES" envDefault:"10"`
 

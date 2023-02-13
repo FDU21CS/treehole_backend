@@ -13,7 +13,7 @@ const docTemplate = `{
         "contact": {
             "name": "Maintainer Chen Ke",
             "url": "https://danxi.fduhole.com/about",
-            "email": "dev@fduhole.com"
+            "email": "jingyijun@fduhole.com"
         },
         "license": {
             "name": "Apache 2.0",
@@ -872,8 +872,8 @@ var SwaggerInfo = &swag.Spec{
 	Host:             "localhost:8000",
 	BasePath:         "/api",
 	Schemes:          []string{},
-	Title:            "Moss Backend",
-	Description:      "Moss Backend",
+	Title:            "Treehole Backend",
+	Description:      "Treehole Backend",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 }

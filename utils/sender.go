@@ -1,41 +1,33 @@
 package utils
 
 import (
+	"crypto/tls"
 	"fmt"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/regions"
-	ses "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ses/v20201002"
+	"github.com/jordan-wright/email"
+	"net/smtp"
 	"treehole_backend/config"
 )
 
 func SendCodeEmail(code, receiver string) error {
-	credential := common.NewCredential(
-		config.Config.TencentSecretID,
-		config.Config.TencentSecretKey,
+	emailUsername := config.Config.EmailServerNoReplyUrl.User.Username() + "@" + config.Config.EmailDomain
+	emailPassword, _ := config.Config.EmailServerNoReplyUrl.User.Password()
+	e := &email.Email{
+		To:      []string{receiver},
+		From:    emailUsername,
+		Subject: fmt.Sprintf("%s 邮箱验证", config.Config.SiteName),
+		Text:    []byte(fmt.Sprintf("您的验证码是 %s，10分钟内有效\n如果您意外收到此邮件，请忽略\n", code)),
+	}
+
+	return e.SendWithTLS(
+		config.Config.EmailServerNoReplyUrl.Host,
+		smtp.PlainAuth(
+			"",
+			emailUsername,
+			emailPassword,
+			config.Config.EmailServerNoReplyUrl.Hostname(),
+		),
+		&tls.Config{
+			ServerName: config.Config.EmailServerNoReplyUrl.Hostname(),
+		},
 	)
-	// 实例化一个client选项，可选的，没有特殊需求可以跳过
-	cpf := profile.NewClientProfile()
-	cpf.HttpProfile.Endpoint = "ses.tencentcloudapi.com"
-	// 实例化要请求产品的client对象,clientProfile是可选的
-	client, err := ses.NewClient(credential, regions.HongKong, cpf)
-	if err != nil {
-		return err
-	}
-
-	// 实例化一个请求对象,每个接口都会对应一个request对象
-	request := ses.NewSendEmailRequest()
-
-	request.FromEmailAddress = common.StringPtr(config.Config.EmailUrl)
-	request.Destination = common.StringPtrs([]string{receiver})
-	request.Template = &ses.Template{
-		TemplateID:   common.Uint64Ptr(config.Config.TencentTemplateID),
-		TemplateData: common.StringPtr(fmt.Sprintf("{\"code\": \"%s\"}", code)),
-	}
-	request.Subject = common.StringPtr("[MOSS] Verification Code")
-	request.TriggerType = common.Uint64Ptr(1)
-
-	// 返回的resp是一个SendEmailResponse的实例，与请求对象对应
-	_, err = client.SendEmail(request)
-	return err
 }

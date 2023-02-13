@@ -1,10 +1,10 @@
-//	@title			Moss Backend
+//	@title			FDU21CS Treehole Backend
 //	@version		0.0.1
-//	@description	Moss Backend
+//	@description	FDU21CS Treehole Backend
 
 //	@contact.name	Maintainer Chen Ke
 //	@contact.url	https://danxi.fduhole.com/about
-//	@contact.email	dev@fduhole.com
+//	@contact.email	jingyijun@fduhole.com
 
 //	@license.name	Apache 2.0
 //	@license.url	https://www.apache.org/licenses/LICENSE-2.0.html

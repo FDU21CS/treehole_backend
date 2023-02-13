@@ -184,14 +184,14 @@ definitions:
 host: localhost:8000
 info:
   contact:
-    email: dev@fduhole.com
+    email: jingyijun@fduhole.com
     name: Maintainer Chen Ke
     url: https://danxi.fduhole.com/about
-  description: Moss Backend
+  description: Treehole Backend
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-  title: Moss Backend
+  title: Treehole Backend
   version: 0.0.1
 paths:
   /:

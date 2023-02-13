@@ -1,8 +1,8 @@
 {
   "name": "FDU21CS Treehole",
   "version": "0.0.1",
-  "homepage": "https://github.com/opentreehole",
-  "repository": "https://github.com/OpenTreeHole/treehole_next",
+  "homepage": "https://github.com/FDU21CS",
+  "repository": "https://github.com/FDU21CS/treehole_backend",
   "author": "JingYiJun",
   "email": "jingyijun@fduhole.com",
   "license": "Apache-2.0"
