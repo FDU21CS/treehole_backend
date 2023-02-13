@@ -38,7 +38,7 @@ type ListHoleRequest struct {
 }
 
 type CreateHoleRequest struct {
-	Content    string `json:"content" validate:"max:15000"`
+	Content    string `json:"content" validate:"max=15000"`
 	SpecialTag string `json:"special_tag"`
 }
 
@@ -50,12 +50,12 @@ type ListFloorRequest struct {
 }
 
 type CreateFloorRequest struct {
-	Content    string `json:"content" validate:"max:15000"`
+	Content    string `json:"content" validate:"max=15000"`
 	SpecialTag string `json:"special_tag"`
 }
 
 type ModifyFloorRequest struct {
-	Content    *string `json:"content" validate:"max:15000"`
+	Content    *string `json:"content" validate:"max=15000"`
 	SpecialTag string  `json:"special_tag"`
 }
 
