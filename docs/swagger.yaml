@@ -3,6 +3,7 @@ definitions:
   apis.CreateFloorRequest:
     properties:
       content:
+        maxLength: 15000
         type: string
       special_tag:
         type: string
@@ -10,6 +11,7 @@ definitions:
   apis.CreateHoleRequest:
     properties:
       content:
+        maxLength: 15000
         type: string
       special_tag:
         type: string
@@ -35,6 +37,7 @@ definitions:
   apis.ModifyFloorRequest:
     properties:
       content:
+        maxLength: 15000
         type: string
       special_tag:
         type: string
@@ -81,6 +84,8 @@ definitions:
       content:
         description: content of the floor, no more than 15000
         type: string
+      created_at:
+        type: string
       deleted:
         type: boolean
       history:
@@ -105,9 +110,7 @@ definitions:
       special_tag:
         description: additional info, like "树洞管理团队"
         type: string
-      time_created:
-        type: string
-      time_updated:
+      updated_at:
         type: string
     type: object
   models.FloorHistory:
@@ -187,11 +190,11 @@ info:
     email: jingyijun@fduhole.com
     name: Maintainer Chen Ke
     url: https://danxi.fduhole.com/about
-  description: Treehole Backend
+  description: FDU21CS Treehole Backend
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-  title: Treehole Backend
+  title: FDU21CS Treehole Backend
   version: 0.0.1
 paths:
   /:
@@ -289,7 +292,8 @@ paths:
         in: query
         name: order
         type: string
-      - in: query
+      - default: 10
+        in: query
         name: size
         type: integer
       - in: query

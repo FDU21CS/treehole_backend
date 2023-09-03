@@ -1,8 +1,8 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "Treehole Backend",
-        "title": "Treehole Backend",
+        "description": "FDU21CS Treehole Backend",
+        "title": "FDU21CS Treehole Backend",
         "contact": {
             "name": "Maintainer Chen Ke",
             "url": "https://danxi.fduhole.com/about",
@@ -170,6 +170,7 @@
                     },
                     {
                         "type": "integer",
+                        "default": 10,
                         "name": "size",
                         "in": "query"
                     },
@@ -589,7 +590,8 @@
             "type": "object",
             "properties": {
                 "content": {
-                    "type": "string"
+                    "type": "string",
+                    "maxLength": 15000
                 },
                 "special_tag": {
                     "type": "string"
@@ -600,7 +602,8 @@
             "type": "object",
             "properties": {
                 "content": {
-                    "type": "string"
+                    "type": "string",
+                    "maxLength": 15000
                 },
                 "special_tag": {
                     "type": "string"
@@ -638,7 +641,8 @@
             "type": "object",
             "properties": {
                 "content": {
-                    "type": "string"
+                    "type": "string",
+                    "maxLength": 15000
                 },
                 "special_tag": {
                     "type": "string"
@@ -706,6 +710,9 @@
                     "description": "content of the floor, no more than 15000",
                     "type": "string"
                 },
+                "created_at": {
+                    "type": "string"
+                },
                 "deleted": {
                     "type": "boolean"
                 },
@@ -739,10 +746,7 @@
                     "description": "additional info, like \"树洞管理团队\"",
                     "type": "string"
                 },
-                "time_created": {
-                    "type": "string"
-                },
-                "time_updated": {
+                "updated_at": {
                     "type": "string"
                 }
             }
