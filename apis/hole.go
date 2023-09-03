@@ -2,7 +2,6 @@ package apis
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"time"
 	. "treehole_backend/models"
 	. "treehole_backend/utils"
 )
@@ -22,12 +21,12 @@ func ListHoles(c *fiber.Ctx) error {
 		return err
 	}
 
-	if query.StartTime.IsZero() {
-		query.StartTime = time.Now()
-	}
-
 	var holes Holes
-	err = DB.Order(query.Order+" desc").Where("? < ?", query.Order, query.StartTime).Find(&holes).Error
+	querySet := DB.Order(query.Order + " desc")
+	if query.StartTime != nil {
+		querySet = querySet.Where("? < ?", query.Order, *query.StartTime)
+	}
+	err = querySet.Find(&holes).Error
 	if err != nil {
 		return err
 	}

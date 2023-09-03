@@ -32,9 +32,9 @@ type VerifyResponse struct {
 /* Hole */
 
 type ListHoleRequest struct {
-	StartTime time.Time `json:"start_time" query:"start_time"`
-	Size      int       `json:"size" query:"size"`
-	Order     string    `json:"order" query:"order" validate:"omitempty,oneof=created_at updated_at" default:"created_at"`
+	StartTime *time.Time `json:"start_time" query:"start_time"`
+	Size      int        `json:"size" query:"size" default:"10"`
+	Order     string     `json:"order" query:"order" validate:"omitempty,oneof=created_at updated_at" default:"created_at"`
 }
 
 type CreateHoleRequest struct {

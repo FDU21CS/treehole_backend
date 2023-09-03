@@ -2,9 +2,11 @@ package apis
 
 import (
 	"errors"
+
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
+
 	. "treehole_backend/models"
 	. "treehole_backend/utils"
 	"treehole_backend/utils/auth"
@@ -47,7 +49,8 @@ func Register(c *fiber.Ctx) error {
 		return err
 	}
 
-	// registered
+	// register
+	user.Email = body.Email
 	user.Password, err = auth.MakePassword(body.Password)
 	if err != nil {
 		return err

@@ -14,8 +14,8 @@ import (
 type Floor struct {
 	/// saved fields
 	ID        int       `json:"id" gorm:"primaryKey"`
-	CreatedAt time.Time `json:"time_created"`
-	UpdatedAt time.Time `json:"time_updated"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 
 	/// base info
 
@@ -42,7 +42,7 @@ type Floor struct {
 	UserID int `json:"-" gorm:"not null"`
 
 	// a floor has many history
-	History FloorHistorySlice `json:"history"`
+	History FloorHistorySlice `json:"history,omitempty"`
 
 	/// dynamically generated fields
 
