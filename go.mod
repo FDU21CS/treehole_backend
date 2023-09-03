@@ -3,7 +3,7 @@ module treehole_backend
 go 1.20
 
 require (
-	github.com/caarlos0/env/v6 v6.10.1
+	github.com/caarlos0/env/v9 v9.0.0
 	github.com/creasty/defaults v1.7.0
 	github.com/eko/gocache/lib/v4 v4.1.4
 	github.com/eko/gocache/store/go_cache/v4 v4.1.2

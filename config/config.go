@@ -2,8 +2,9 @@ package config
 
 import (
 	"fmt"
-	"github.com/caarlos0/env/v6"
 	"net/url"
+
+	"github.com/caarlos0/env/v9"
 )
 
 var Config struct {
@@ -21,7 +22,7 @@ var Config struct {
 	HoleFloorSize int `env:"HOLE_FLOOR_SIZE" envDefault:"10"`
 
 	// file secrets
-	EmailList []string `env:"EMAIL_LIST,file" envDefault:"/var/run/secrets/email_list"` // an email list in json array format
+	EmailList []string `env:"-"` // an email list in json array format
 }
 
 func InitConfig() {
